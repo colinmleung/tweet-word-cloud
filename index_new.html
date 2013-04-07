@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>jQCloud Example</title>
+    <link rel="stylesheet" type="text/css" href="/tweet-word-cloud/jQCloud-master/jqcloud/jqcloud.css" />
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/tweet-word-cloud/jQCloud-master/jqcloud/jqcloud-1.0.3.js"></script>
+    <script type="text/javascript">
+      /*!
+       * Create an array of word objects, each representing a word in the cloud
+       */
+       
+       var response = $.ajax({
+        url: "/tweet-word-cloud/index.php",
+        type: "GET",
+        dataType: "json",
+        async: false
+      });
+      
+      var response_object = $.parseJSON(response.responseText);
+  
+      var formatted_response = [];
+      $.map(response_object, function(val, i) {
+        formatted_response[i] = new Object();
+        formatted_response[i].text = val.hashtag;
+        formatted_response[i].weight = val.count;
+      });
+      
+      var word_array = [
+          {text: "Lorem", weight: 15},
+          {text: "Ipsum", weight: 9, link: "http://jquery.com/"},
+          {text: "Dolor", weight: 6, html: {title: "I can haz any html attribute"}},
+          {text: "Sit", weight: 7},
+          {text: "Amet", weight: 5}
+      ];
+
+      $(function() {
+        // When DOM is ready, select the container element and call the jQCloud method, passing the array of words as the first argument.
+        $("#example").jQCloud(formatted_response);
+      });
+    </script>
+</head>
+<body>
+    <div id="example" style="width: 550px; height: 350px;"></div>
+</body>
+</html>
