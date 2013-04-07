@@ -44,7 +44,7 @@ var childProcess = require('child_process'),
 	addTweets,
 	deleteTweets;
 	
-addTweets = childProcess.exec('node ./data_stream/addTweets/import_data.js', function (error, stdout, stderr) {
+addTweets = childProcess.exec('node ./data_stream/import_data.js', function (error, stdout, stderr) {
    if (error) {
      console.log(error.stack);
      console.log('Error code: '+error.code);
@@ -55,19 +55,5 @@ addTweets = childProcess.exec('node ./data_stream/addTweets/import_data.js', fun
  });
 
  addTweets.on('exit', function (code) {
-   console.log('Child process exited with exit code '+code);
- });
- 
- deleteTweets = childProcess.exec('node ./data_stream/removeTweets/delete_data.js', function (error, stdout, stderr) {
-   if (error) {
-     console.log(error.stack);
-     console.log('Error code: '+error.code);
-     console.log('Signal received: '+error.signal);
-   }
-   console.log('Child Process STDOUT: '+stdout);
-   console.log('Child Process STDERR: '+stderr);
- });
-
- deleteTweets.on('exit', function (code) {
    console.log('Child process exited with exit code '+code);
  });

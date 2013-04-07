@@ -1,7 +1,8 @@
 module.exports = function(mongoose) {
     var TweetSchema = new mongoose.Schema({
         id: { type: Number, unique: true },
-        hashtags: [String]
+        hashtags: [String],
+        createdAt: { type: Date, expires: 60*60*24, default: Date.now}
     });
     
     var Tweet = mongoose.model('Tweet', TweetSchema);
@@ -20,11 +21,6 @@ module.exports = function(mongoose) {
             });
             tweet_doc.save();
         }
-    }
-    
-    var removeExpired = function () {
-        console.log('Working');
-        Tweet.find({ _id: { $lt: objectIdWithTimestamp(new Date()) } }).remove();
     }
     
     var countTags = function () {
@@ -49,29 +45,9 @@ module.exports = function(mongoose) {
         }
         Tweet.mapReduce(o, function(err, docs){});
     }
-    
-    function objectIdWithTimestamp(timestamp)
-    {
-        // Convert string date to Date object (otherwise assume timestamp is a date)
-        if (typeof(timestamp) == 'string') {
-            timestamp = new Date(timestamp);
-        }
-        
-        // Subtract a day from the datetime
-        var sub_DT = Math.floor(timestamp/1000) - 86400;
-        
-        // Convert date object to hex seconds since Unix epoch
-        var hexSeconds = sub_DT.toString(16);
-
-        // Create an ObjectId with that hex timestamp
-        var constructedObjectId = mongoose.Types.ObjectId(hexSeconds + "0000000000000000");
-
-        return constructedObjectId;
-    }
 
     return {
         add: add,
-        removeExpired: removeExpired,
         countTags: countTags,
         Tweet: Tweet
     }
