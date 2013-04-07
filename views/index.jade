@@ -1,0 +1,32 @@
+!!! 5
+html(lang='en')
+    head
+        link(rel='stylesheet', type='text/css', href='/styles/jqcloud.css')
+        script(data-main='js/boot', type='text/javascript', src='/js/libs/require.js')
+    body
+        div#content
+        div#content1
+        script(type='text/javascript', src='http://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js')
+        script(type='text/javascript', src='/js/libs/jqcloud.js')
+        script
+            var hashtagcounts = $.parseJSON(!{JSON.stringify(data)});
+            var mod_hashtagcounts = [];
+            $.map(hashtagcounts, function(val, i) {
+                mod_hashtagcounts[i] = {};
+                mod_hashtagcounts[i].text = val.value[0];
+                mod_hashtagcounts[i].weight = val.value[1].count;
+                mod_hashtagcounts[i].link = window.location.pathname + val.value[0];
+            })
+            var word_array = [
+                {text: "Lorem", weight: 15},
+                {text: "Ipsum", weight: 9, link: "http://jquery.com/"},
+                {text: "Dolor", weight: 6, html: {title: "I can haz any html attribute"}},
+                {text: "Sit", weight: 7},
+                {text: "Amet", weight: 5}
+                // ...as many words as you want
+            ];
+            
+            $(function() {
+                // When DOM is ready, select the container element and call the jQCloud method, passing the array of words as the first argument.
+                $("#content1").jQCloud(mod_hashtagcounts, { width: 300, height: 200 });
+            });
