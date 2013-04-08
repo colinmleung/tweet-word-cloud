@@ -1,6 +1,10 @@
-var express = require('express');
-var app = express();
-var events = require('events');
+var express = require('express')
+  , app = express()
+  , server = require('http').createServer(app)
+  , io = require('socket.io').listen(server);
+  
+server.listen(8080);
+    
 var credentials = require('./credentials.js');
 
 var mongoose = require('mongoose');
@@ -22,38 +26,56 @@ app.configure(function () {
 
 app.get('/', function (req, res) {
     HashtagCount.update();
-    HashtagCount.getList(function(err, docs) {
-		res.render('index.jade', {data: JSON.stringify(docs)});
-	});
+    setInterval(function() {
+        HashtagCount.getList(function(err, docs) {
+            res.render('index.jade', {data: JSON.stringify(docs)});
+        });
+    }, 5000);
 });
 
-app.get('/:hashtag', function (req, res) {
+/*app.get('/:hashtag', function (req, res) {
 	var hashtag = req.params.hashtag;
 	res.send(200);
-	//res.render('tweetfeed.jade');
-});
+	res.render('tweetfeed.jade');
+});*/
 
-
-
-var port = 8080;
-app.listen(port);
+/*io.sockets.on('connection', function(socket) {
+    socket.emit('news', { hello: 'world' });
+    socket.on('my other event', function(data) {
+        console.log(data);
+    });
+});*/
 
 // Child Processes
 
 var childProcess = require('child_process'),
 	addTweets,
-	deleteTweets;
+	calculateHashtagCounts;
 	
 addTweets = childProcess.exec('node ./data_stream/import_data.js', function (error, stdout, stderr) {
-   if (error) {
-     console.log(error.stack);
-     console.log('Error code: '+error.code);
-     console.log('Signal received: '+error.signal);
-   }
-   console.log('Child Process STDOUT: '+stdout);
-   console.log('Child Process STDERR: '+stderr);
- });
+  if (error) {
+    console.log(error.stack);
+    console.log('Error code: '+error.code);
+    console.log('Signal received: '+error.signal);
+  }
+  console.log('Child Process STDOUT: '+stdout);
+  console.log('Child Process STDERR: '+stderr);
+});
 
- addTweets.on('exit', function (code) {
-   console.log('Child process exited with exit code '+code);
- });
+addTweets.on('exit', function (code) {
+  console.log('Child process exited with exit code '+code);
+});
+ 
+calculateHashtagCounts = childProcess.exec('node ./data_stream/calculate_hashtag_counts.js', function (error, stdout, stderr) {
+  if (error) {
+    console.log(error.stack);
+    console.log('Error code: '+error.code);
+    console.log('Signal received: '+error.signal);
+  }
+  console.log('Child Process STDOUT: '+stdout);
+  console.log('Child Process STDERR: '+stderr);
+});
+
+calculateHashtagCounts.on('exit', function (code) {
+  console.log('Child process exited with exit code '+code);
+});
