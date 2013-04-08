@@ -48,7 +48,7 @@ app.get('/', function (req, res) {
 
 // Child Processes
 
-var childProcess = require('child_process'),
+/*var childProcess = require('child_process'),
 	addTweets,
 	calculateHashtagCounts;
 	
@@ -78,4 +78,30 @@ calculateHashtagCounts = childProcess.exec('node ./data_stream/calculate_hashtag
 
 calculateHashtagCounts.on('exit', function (code) {
   console.log('Child process exited with exit code '+code);
+});*/
+
+var forever = require('forever-monitor');
+
+var addTweets = new (forever.Monitor)('./data_stream/import_data.js', {
+  max: 3,
+  silent: true,
+  options: []
 });
+
+addTweets.on('exit', function () {
+  console.log('import_data.js has exited after 3 restarts');
+});
+
+addTweets.start();
+
+var calculateHashtagCounts = new (forever.Monitor)('./data_stream/calculate_hashtag_counts.js', {
+  max: 3,
+  silent: true,
+  options: []
+});
+
+calculateHashtagCounts.on('exit', function () {
+  console.log('calculate_hashtag_counts.js has exited after 3 restarts');
+});
+
+calculateHashtagCounts.start();
