@@ -1,4 +1,4 @@
-module.exports = function(mongoose) {
+module.exports = function(mongoose, HashtagCount) {
     var TweetSchema = new mongoose.Schema({
         id: { type: Number, unique: true },
         hashtags: [String],
@@ -38,12 +38,45 @@ module.exports = function(mongoose) {
             });
             return { count: sum }
         }
-        o.out = { replace: 'hashtagcounts' };
+        //o.out = { replace: 'hashtagcounts' };
+        o.out = { inline: 1 }
         o.verbose = true;
         o.finalize = function (key, values) {
             return new Array(key, values);
         }
-        Tweet.mapReduce(o, function(err, docs){});
+        Tweet.mapReduce(o, function(err, docs){
+            /*docs.find().sort('-value.count').limit(100).exec(function(err, docs) {
+                db.hashtagcounts.insert(docs);
+            });*/
+            
+            docs.sort(compareHashtagCounts);
+            docs = docs.slice(0,100);
+            transform(docs);
+            //var hashtag_count_model = new HashtagCount.HashtagCount();
+            HashtagCount.remove();
+            HashtagCount.create(docs);
+            
+            //saveToMongoDB(docs);
+            
+            function transform(array) {
+                for (var i = 0; i < array.length; i++) {
+                    array[i] = { hashtag: array[i].value[0], count: array[i].value[1].count };
+                }
+            }
+            
+            /*function saveToMongoDB(array) {
+                array.forEach(function (item) {
+                    var hashtagcount_doc = new HashtagCount.HashtagCount();
+                    hashtagcount_doc.hashtag = item.value[0];
+                    hashtagcount_doc.count = item.value[1].count;
+                    hashtagcount_doc.save();
+                });
+            }*/
+            
+            function compareHashtagCounts(a, b) {
+                return b.value[1].count - a.value[1].count;
+            }
+        });
     }
 
     return {

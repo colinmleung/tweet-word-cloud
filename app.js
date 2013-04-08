@@ -9,8 +9,9 @@ var credentials = require('./credentials.js');
 
 var mongoose = require('mongoose');
 
-var Tweet = require('./models/Tweet')(mongoose);
-var HashtagCount = require('./models/HashtagCount')(mongoose, Tweet);
+var HashtagCount = require('./models/HashtagCount')(mongoose);
+var Tweet = require('./models/Tweet')(mongoose, HashtagCount);
+
 
 app.configure(function () {
     app.set('view engine', 'jade');
