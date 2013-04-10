@@ -1,23 +1,21 @@
-module.exports = function(mongoose, Tweet) {
+module.exports = function(mongoose) {
     var HashtagCountSchema = new mongoose.Schema({
         hashtag: String,
         count: Number
-        //value: [mongoose.Schema.Types.Mixed]
     });
     
     var HashtagCount = mongoose.model('HashtagCount', HashtagCountSchema);
     
     var getList = function (callback) {
-        HashtagCount.find().sort('-value.count').limit(100).exec(callback);
+        HashtagCount.find().exec(callback);
     };
     
-    var create = function (array) {
-        HashtagCount.create(array, function (err) {
-        });
+    var create = function (array, callback) {
+        HashtagCount.create(array, callback);
     };
     
-    var remove = function () {
-        HashtagCount.remove({}, function () {});
+    var remove = function (callback) {
+        HashtagCount.remove({}, callback);
     };
     
     return {

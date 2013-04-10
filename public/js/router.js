@@ -1,11 +1,12 @@
 define(['views/index'], ['views/tweetfeed'], function (IndexView, TweetfeedView) {
     var TweetWordCloudRouter = Backbone.Router.extend({
         currentView: null,
-		
-		socketEvents: _.extend({}, Backbone.Events),
+        
+        socketEvents: _.extend({}, Backbone.Events),
         
         routes: {
-            "index": "index"
+            "index": "index",
+            "tweetfeed": "tweetfeed"
         },
         
         changeView: function (view) {
@@ -17,11 +18,11 @@ define(['views/index'], ['views/tweetfeed'], function (IndexView, TweetfeedView)
         },
         
         index: function () {
-            this.changeView(new IndexView({ socketEvents: this.socketEvents }));
+            this.changeView(new IndexView({socketEvents: this.socketEvents}));
         },
 		
 		tweetfeed: function () {
-			this.changeView(new TweetfeedView({ socketEvents: this.socketEvents }));
+			this.changeView(new TweetfeedView({socketEvents: this.socketEvents}));
 		}
     });
     

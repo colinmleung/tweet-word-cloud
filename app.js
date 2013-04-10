@@ -12,7 +12,6 @@ var mongoose = require('mongoose');
 var HashtagCount = require('./models/HashtagCount')(mongoose);
 var Tweet = require('./models/Tweet')(mongoose, HashtagCount);
 
-
 app.configure(function () {
     app.set('view engine', 'jade');
     app.set('view options', { layout: true });
@@ -26,7 +25,6 @@ app.configure(function () {
 });
 
 app.get('/', function (req, res) {
-    HashtagCount.update();
     setInterval(function() {
         HashtagCount.getList(function(err, docs) {
             res.render('index.jade', {data: JSON.stringify(docs)});
@@ -34,52 +32,18 @@ app.get('/', function (req, res) {
     }, 5000);
 });
 
-/*app.get('/:hashtag', function (req, res) {
+app.get('/:hashtag', function (req, res) {
 	var hashtag = req.params.hashtag;
-	res.send(200);
-	res.render('tweetfeed.jade');
-});*/
+	res.render('tweetfeed.jade', { data: JSON.stringify(hashtag) });
+});
 
-/*io.sockets.on('connection', function(socket) {
-    socket.emit('news', { hello: 'world' });
-    socket.on('my other event', function(data) {
-        console.log(data);
+io.sockets.on('connection', function (socket) {
+    socket.on('join tweetfeed', function (data) {
+        socket.join(data.hashtag);
     });
-});*/
+});
 
 // Child Processes
-
-/*var childProcess = require('child_process'),
-	addTweets,
-	calculateHashtagCounts;
-	
-addTweets = childProcess.exec('node ./data_stream/import_data.js', function (error, stdout, stderr) {
-  if (error) {
-    console.log(error.stack);
-    console.log('Error code: '+error.code);
-    console.log('Signal received: '+error.signal);
-  }
-  console.log('Child Process STDOUT: '+stdout);
-  console.log('Child Process STDERR: '+stderr);
-});
-
-addTweets.on('exit', function (code) {
-  console.log('Child process exited with exit code '+code);
-});
- 
-calculateHashtagCounts = childProcess.exec('node ./data_stream/calculate_hashtag_counts.js', function (error, stdout, stderr) {
-  if (error) {
-    console.log(error.stack);
-    console.log('Error code: '+error.code);
-    console.log('Signal received: '+error.signal);
-  }
-  console.log('Child Process STDOUT: '+stdout);
-  console.log('Child Process STDERR: '+stderr);
-});
-
-calculateHashtagCounts.on('exit', function (code) {
-  console.log('Child process exited with exit code '+code);
-});*/
 
 var forever = require('forever-monitor');
 
@@ -94,15 +58,3 @@ addTweets.on('exit', function () {
 });
 
 addTweets.start();
-
-var calculateHashtagCounts = new (forever.Monitor)('./data_stream/calculate_hashtag_counts.js', {
-  max: 3,
-  silent: true,
-  options: []
-});
-
-calculateHashtagCounts.on('exit', function () {
-  console.log('calculate_hashtag_counts.js has exited after 3 restarts');
-});
-
-calculateHashtagCounts.start();

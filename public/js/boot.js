@@ -3,20 +3,22 @@ require.config({
         jquery: '/js/libs/jquery',
         Underscore: '/js/libs/underscore',
         Backbone: '/js/libs/backbone',
-        models: 'models',
         jqcloud: '/js/libs/jqcloud',
         text: '/js/libs/text',
         templates: '../templates',
-		Sockets: '/js/libs/socket.io/socket.io'
+        socketio: '../socket.io/socket.io'
     },
     
     shim: {
 		'jquery': {
 			'exports': '$'
 		},
+        'socketio': {
+            'exports': 'io'
+        },
 		'jqcloud': ['jquery'],
         'Backbone': ['Underscore', 'jquery'],
-        'TweetWordCloud': ['Backbone', 'jqcloud']
+        'TweetWordCloud': ['Backbone', 'jqcloud', 'socketio']
     }
 });
 
