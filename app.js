@@ -1,17 +1,19 @@
+// Set up server
 var express = require('express')
   , app = express()
   , server = require('http').createServer(app)
   , io = require('socket.io').listen(server);
-  
 server.listen(8080);
-    
+
+// Import credentials for DB and Twitter Stream
 var credentials = require('./credentials.js');
 
+// Set up ORM
 var mongoose = require('mongoose');
-
 var HashtagCount = require('./models/HashtagCount')(mongoose);
 var Tweet = require('./models/Tweet')(mongoose, HashtagCount);
 
+// Configure the applicaiton
 app.configure(function () {
     app.set('view engine', 'jade');
     app.set('view options', { layout: true });
@@ -24,31 +26,30 @@ app.configure(function () {
     });
 });
 
+// Index
 app.get('/', function (req, res) {
-    //setInterval(function() {
-        HashtagCount.getList(function(err, docs) {
-            res.render('index.jade', {data: JSON.stringify(docs)});
-        });
-    //}, 5000);
+    HashtagCount.getList(function(err, docs) {
+        res.render('index.jade', {data: JSON.stringify(docs)});
+    });
 });
 
+// Hashtag Rooms
 app.get('/:hashtag', function (req, res) {
 	var hashtag = req.params.hashtag;
     res.render('tweetfeed.jade', { data: JSON.stringify(hashtag) });
 });
 
 
-
-
 /*****************************************/
 
-// connect to Twitter through the twit library and set up the stream
+// Connect to Twitter through the twit library
 var Twit = require('twit');
 var T = new Twit(credentials.twitter_access);
 var stream = T.stream('statuses/sample');
 
 var top_hashtag_list = [];
 
+// Stream tweets from Twitter
 stream.on('tweet', function (tweet) {
     if (tweet && tweet.id && tweet.entities && tweet.entities.hashtags && tweet.entities.hashtags.length > 0) {
         var hashtags = [];
@@ -56,6 +57,7 @@ stream.on('tweet', function (tweet) {
         for (var i = 0; i < count; i++) {
             hashtags[i] = tweet.entities.hashtags[i].text;
         }
+        
         // emit socket.io messages if tweet contains top 100 hashtags
         emitTweet(hashtags, tweet.text);
 
@@ -64,6 +66,7 @@ stream.on('tweet', function (tweet) {
     }
 });
 
+// Send relevant tweets for hashtag rooms
 function emitTweet (hashtags, text) {
     // find hashtags in top 100
     var good_hashtags = getIntersect(hashtags, top_hashtag_list);
@@ -71,7 +74,6 @@ function emitTweet (hashtags, text) {
     // emit tweet in socket.io rooms with relevant hashtags
     var length = good_hashtags.length;
     for (var i = 0; i < length; i++) {
-        //console.log('Socket emitting in room ' + good_hashtags[i] + ': ' + text);
         io.sockets.in(good_hashtags[i]).emit('tweet', { tweet: text });
     }
     
@@ -103,34 +105,10 @@ setInterval(function() {
     });
 }, 60000);
 
-
+// Connect pages to hashtag rooms
 io.sockets.on('connection', function (socket) {
   socket.on('join tweetfeed', function (data) {
-    //console.log(data.hashtag);
     socket.join(data.hashtag);
   });
 });
-
-/*setInterval(function () {
-    io.sockets.in('ROOM').emit('tweet', { tweet: "TWEET HERE" });
-}, 5000);*/
-
-/*****************************************/
-
-
-// Child Processes
-
-/*var forever = require('forever-monitor');
-
-var addTweets = new (forever.Monitor)('./data_stream/import_data.js', {
-  max: 3,
-  silent: true,
-  options: []
-});
-
-addTweets.on('exit', function () {
-  console.log('import_data.js has exited after 3 restarts');
-});
-
-addTweets.start();*/
 
