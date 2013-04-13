@@ -1,12 +1,13 @@
 !!! 5
 html(lang='en')
-    head
-    body
-        div#content
-        div#content1
-        script(type='text/javascript', src='http://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js')
-        script(type='text/javascript', src='http://localhost:8080/socket.io/socket.io.js')
-        script
-            var socket = io.connect('http://localhost:8080');
-            var hashtag_name = $.parseJSON(!{JSON.stringify(data)});
-            socket.emit('join tweetfeed', {hashtag: hashtag_name});
+  head
+  body
+    div#content
+    div#content1
+    script(type='text/javascript', src='http://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js')
+    script(type='text/javascript', src='http://localhost:8080/socket.io/socket.io.js')
+    script
+      var hashtag_name = $.parseJSON(!{JSON.stringify(data)});
+      var socket = io.connect('http://localhost');
+      socket.emit('join tweetfeed', { hashtag: hashtag_name });
+      socket.on('tweet', function(data) { $('#content1').append('<p>'+data.tweet+'</p>') });
