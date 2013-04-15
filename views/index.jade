@@ -2,7 +2,7 @@
 html(lang='en')
     head
         link(rel='stylesheet', type='text/css', href='/styles/jqcloud.css')
-        script(data-main='js/boot', type='text/javascript', src='/js/libs/require.js')
+        link(rel='stylesheet', type='text/css', href='/styles/master.css')
     body
         div#content
         div#content1
@@ -20,5 +20,5 @@ html(lang='en')
             
             $(function() {
                 // When DOM is ready, select the container element and call the jQCloud method, passing the array of words as the first argument.
-                $("#content1").jQCloud(mod_hashtagcounts, { width: 300, height: 200 });
+                $("#content1").jQCloud(mod_hashtagcounts, { width: $(window).width()*0.95, height: $(window).height()*0.95});
             });
