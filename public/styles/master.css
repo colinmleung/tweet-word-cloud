@@ -2,9 +2,12 @@ body {
     background-color: black;
 }
 
+
+
 p {
     font-family: "Helvetica", "Arial", sans-serif;
-    font-size: 10px;
+    font-size: 20px;
     line-height: normal;
     color: white;
+    text-align: center;
 }
