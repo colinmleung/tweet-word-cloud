@@ -38,7 +38,7 @@ module.exports = function(mongoose, HashtagCount) {
         Tweet.mapReduce(o, function(err, docs){
             
             docs.sort(compareHashtagCounts);
-            docs = docs.slice(0,100);
+            docs = docs.slice(0,50);
             transform(docs);
             
             HashtagCount.remove(function () {

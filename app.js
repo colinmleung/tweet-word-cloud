@@ -70,11 +70,12 @@ stream.on('tweet', function (tweet) {
 function emitTweet (hashtags, text) {
     // find hashtags in top 100
     var good_hashtags = getIntersect(hashtags, top_hashtag_list);
-        
+    
     // emit tweet in socket.io rooms with relevant hashtags
     var length = good_hashtags.length;
     for (var i = 0; i < length; i++) {
         io.sockets.in(good_hashtags[i]).emit('tweet', { tweet: text });
+        io.sockets.in('hashtagcloud').emit('hashtag tweet', { hashtag: good_hashtags[i] });
     }
     
     function getIntersect(arr1, arr2) {
@@ -109,6 +110,9 @@ setInterval(function() {
 io.sockets.on('connection', function (socket) {
   socket.on('join tweetfeed', function (data) {
     socket.join(data.hashtag);
+  });
+  socket.on('join hashtagcloud', function (data) {
+    socket.join('hashtagcloud');
   });
 });
 
