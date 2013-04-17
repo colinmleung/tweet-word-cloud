@@ -2,7 +2,7 @@ module.exports = function(mongoose, HashtagCount) {
     var TweetSchema = new mongoose.Schema({
         id: { type: Number, unique: true },
         hashtags: [String],
-        createdAt: { type: Date, expires: 60*60*24, default: Date.now}
+        createdAt: { type: Date, expires: 60*60, default: Date.now}
     });
     
     var Tweet = mongoose.model('Tweet', TweetSchema);
