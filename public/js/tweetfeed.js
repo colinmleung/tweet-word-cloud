@@ -2,32 +2,39 @@ $(function () {
   
   (function pulse() {
     $('header').delay(1000).fadeTo('slow', 0).delay(1000).fadeTo('slow', 1, function () {
-        if (tweet_container.tweet_array.length === 0) {
+        if ($('div.tweetbox').length === 0) {
             pulse();
         }
     });
   })();
   
-  var tweet_container = {
-    tweet_array: [],
-    
-    push: function (tweet) {
-      this.tweet_array.unshift(tweet);
-      this.render();
-    },
-    
-    render: function () {
-      if (this.tweet_array.length > 5) {
-        $('div.tweetbox').first().fadeOut('slow', function () {
+  function remove() { // calls itself until tweet_array is empty
+    console.log('tweetbox length: '+$('div.tweetbox').length);
+    if ($('div.tweetbox').length >= 5) {
+      console.log('removing: ' + $('div.tweetbox').first());
+      $('div.tweetbox').first().fadeOut(1000, function() {
             this.remove();
-        });
-        this.tweet_array.pop();
-      }
-      $('div#content').append('<div class="tweetbox">' + this.tweet_array[0] + '</div>');
-      $('div.tweetbox').last().fadeIn('slow');
+            add();
+      });
+      
+    } else {
+      add();
     }
   };
   
+  function add () {
+    var tweet = tweet_array[0];
+      $('div#content').append('<div class="tweetbox">' + tweet + '</div>');
+      $('div.tweetbox').last().fadeIn(1000, function() {
+        tweet_array.shift();
+        console.log('Add called');
+        if (tweet_array.length > 0) {
+          remove();
+        }
+      });
+  }
+  
+  var tweet_array = [];
   var socket = io.connect('http://localhost');
   socket.emit('join tweetfeed', { hashtag: hashtag_name });
   socket.on('tweet', function(data) {
@@ -41,7 +48,12 @@ $(function () {
     }
     word_array = $.trim(word_array.join(''));
     if (word_array !== "") {*/
-        tweet_container.push(data.tweet);
+        tweet_array.push(data.tweet); // to take out is shift
+        console.log('Tweet_array count @ push: '+tweet_array.length);
+        if (tweet_array.length == 1) {
+          console.log('Remove called');
+          remove();
+        }
     //}
   });
 });
