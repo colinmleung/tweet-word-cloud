@@ -102,6 +102,8 @@ setInterval(function() {
             for (var i = 0; i < length; i++) {
                 top_hashtag_list[i] = docs[i].hashtag;
             }
+
+            io.sockets.in('hashtagcloud').emit('update cloud', { hashtagcounts: docs });
         });
     });
 }, 60000);

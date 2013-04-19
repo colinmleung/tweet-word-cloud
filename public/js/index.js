@@ -9,15 +9,24 @@ socket.on('hashtag tweet', function (data) {
         blink($(eligible_elements[i]));
     }
 });
-
-var mod_hashtagcounts = [];
-$.map(hashtagcounts, function(val, i) {
-    mod_hashtagcounts[i] = {};
-    mod_hashtagcounts[i].text = val.hashtag;
-    mod_hashtagcounts[i].weight = val.count;
-    mod_hashtagcounts[i].link = window.location.pathname + val.hashtag;
-    mod_hashtagcounts[i].html = { rel: val.hashtag };
+socket.on('update cloud', function (data) {
+    $('#content1').empty();
+    loadCloud(data.hashtagcounts);
 });
+
+function loadCloud(datasource) {
+    var mod_hashtagcounts = [];
+
+    $.map(datasource, function(val, i) {
+        mod_hashtagcounts[i] = {};
+        mod_hashtagcounts[i].text = val.hashtag;
+        mod_hashtagcounts[i].weight = val.count;
+        mod_hashtagcounts[i].link = window.location.pathname + val.hashtag;
+        mod_hashtagcounts[i].html = { rel: val.hashtag };
+    });
+    
+    $("#content1").jQCloud(mod_hashtagcounts, { width: $(window).width()*0.95, height: $(window).height()*0.95});
+}
 
 function blink(selector) {
     var orig_color;
@@ -61,7 +70,4 @@ function blink(selector) {
     }, 500);
 }
 
-$(function() {
-    // When DOM is ready, select the container element and call the jQCloud method, passing the array of words as the first argument.
-    $("#content1").jQCloud(mod_hashtagcounts, { width: $(window).width()*0.95, height: $(window).height()*0.95});
-});
+loadCloud(hashtagcounts);
