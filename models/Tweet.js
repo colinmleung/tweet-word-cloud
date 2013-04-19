@@ -33,6 +33,7 @@ module.exports = function(mongoose, HashtagCount) {
         o.out = { inline: 1 }
         o.verbose = true;
         o.finalize = function (key, values) {
+            
             return new Array(key, values);
         }
         Tweet.mapReduce(o, function(err, docs){
@@ -40,10 +41,13 @@ module.exports = function(mongoose, HashtagCount) {
             docs.sort(compareHashtagCounts);
             docs = docs.slice(0,50);
             transform(docs);
-            
-            HashtagCount.remove(function () {
-                HashtagCount.create(docs, callback);
+
+            calculateCountChanges(function () {
+                HashtagCount.remove(function () {
+                    HashtagCount.create(docs, callback);
+                });
             });
+            
             
             function transform(array) {
                 for (var i = 0; i < array.length; i++) {
@@ -53,6 +57,26 @@ module.exports = function(mongoose, HashtagCount) {
 
             function compareHashtagCounts(a, b) {
                 return b.value[1].count - a.value[1].count;
+            }
+            
+            function calculateCountChanges(inner_callback) {
+                var count = docs.length;
+                var find_completed_count = 0;
+                for (var i = 0; i < count; i++) {
+                    HashtagCount.findOne(docs[i].hashtag, function (err, found_entry) {
+                        if (found_entry != null) {
+                            for (var j = 0; j < count; j++) {
+                                if (found_entry.hashtag == docs[j].hashtag) {
+                                    docs[j].count_change = found_entry.count - docs[j].count;
+                                }
+                            }
+                        }
+                        find_completed_count++;
+                        if (find_completed_count === 50) {
+                            inner_callback();
+                        }
+                    });
+                }
             }
         });
     }

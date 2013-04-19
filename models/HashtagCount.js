@@ -1,7 +1,8 @@
 module.exports = function(mongoose) {
     var HashtagCountSchema = new mongoose.Schema({
         hashtag: String,
-        count: Number
+        count: Number,
+        count_change: { type: Number, default: 0 }
     });
     
     var HashtagCount = mongoose.model('HashtagCount', HashtagCountSchema);
@@ -18,10 +19,15 @@ module.exports = function(mongoose) {
         HashtagCount.remove({}, callback);
     };
     
+    var findOne = function (hashtag_name, callback) {
+        HashtagCount.findOne({ hashtag: hashtag_name }, callback);
+    };
+    
     return {
         getList: getList,
         create: create,
         remove: remove,
+        findOne: findOne,
         HashtagCount: HashtagCount
     }
 }
