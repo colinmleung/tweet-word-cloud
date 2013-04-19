@@ -26,7 +26,17 @@ function loadCloud(datasource) {
     });
     
     $("#content1").jQCloud(mod_hashtagcounts, { width: $(window).width()*0.95, height: $(window).height()*0.95});
+    
+    function loadColors(datasource)
+    {
+        var count = datasource.length;
+        for (var i = 0; i < count; i++) {
+            datasource[i].count_change; // NOT FINISHED
+        }
+    }
 }
+
+
 
 function blink(selector) {
     var orig_color;
