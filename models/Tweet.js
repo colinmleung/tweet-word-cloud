@@ -67,7 +67,7 @@ module.exports = function(mongoose, HashtagCount) {
                         if (found_entry != null) {
                             for (var j = 0; j < count; j++) {
                                 if (found_entry.hashtag == docs[j].hashtag) {
-                                    docs[j].count_change = found_entry.count - docs[j].count;
+                                    docs[j].count_change = docs[j].count - found_entry.count;
                                 }
                             }
                         }
