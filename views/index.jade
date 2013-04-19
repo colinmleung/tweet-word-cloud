@@ -5,78 +5,11 @@ html(lang='en')
         link(rel='stylesheet', type='text/css', href='/styles/jqcloud.css')
         link(rel='stylesheet', type='text/css', href='/styles/master.css')
     body
-        div#content
         div#content1
         script(type='text/javascript', src='http://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js')
         script(type='text/javascript', src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js')
+        script(type='text/javascript')
+            var hashtagcounts = $.parseJSON(!{JSON.stringify(data)});
         script(type='text/javascript', src='/js/libs/jqcloud.js')
         script(type='text/javascript', src='http://localhost:8080/socket.io/socket.io.js')
-        script
-            var socket = io.connect('http://localhost');
-            socket.emit('join hashtagcloud');
-            
-            var eligible_elements;
-            socket.on('hashtag tweet', function (data) {
-                eligible_elements = $("span[rel='" + data.hashtag + "']");
-                var length = eligible_elements.length;
-                for (var i = 0; i < length; i++) {
-                    blink($(eligible_elements[i]));
-                }
-            });
-
-            var hashtagcounts = $.parseJSON(!{JSON.stringify(data)});
-            var mod_hashtagcounts = [];
-            $.map(hashtagcounts, function(val, i) {
-                mod_hashtagcounts[i] = {};
-                mod_hashtagcounts[i].text = val.hashtag;
-                mod_hashtagcounts[i].weight = val.count;
-                mod_hashtagcounts[i].link = window.location.pathname + val.hashtag;
-                mod_hashtagcounts[i].html = { rel: val.hashtag };
-            });
-            
-            function blink(selector) {
-                var orig_color;
-                switch ($(selector).attr("class")) {
-                    case "w1":
-                        orig_color = "#aab5f0";
-                        break;
-                    case "w2":
-                        orig_color = "#99ccee";
-                        break;
-                    case "w3":
-                        orig_color = "#a0ddff";
-                        break;
-                    case "w4":
-                        orig_color = "#90c5f0";
-                        break;
-                    case "w5":
-                        orig_color = "#90a0dd";
-                        break;
-                    case "w6":
-                        orig_color = "#90c5f0";
-                        break;
-                    case "w7":
-                        orig_color = "#39d";
-                        break;
-                    case "w8":
-                        orig_color = "#0cf";
-                        break;
-                    case "w9":
-                        orig_color = "#0cf";
-                        break;
-                    case "w10":
-                        orig_color = "#0cf";
-                        break;
-                };
-                $(selector).animate({
-                    color: "#fff"
-                }, 500);
-                $(selector).animate({
-                    color: orig_color
-                }, 500);
-            }
-            
-            $(function() {
-                // When DOM is ready, select the container element and call the jQCloud method, passing the array of words as the first argument.
-                $("#content1").jQCloud(mod_hashtagcounts, { width: $(window).width()*0.95, height: $(window).height()*0.95});
-            });
+        script(type='text/javascript', src='/js/index.js')

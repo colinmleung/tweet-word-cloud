@@ -1,7 +1,7 @@
 $(function () {
   
   (function pulse() {
-    $('header').delay(1000).fadeTo('slow', 0).delay(1000).fadeTo('slow', 1, function () {
+    $('header').delay(500).fadeTo('slow', 0).delay(500).fadeTo('slow', 1, function () {
         if ($('div.tweetbox').length === 0) {
             pulse();
         }
