@@ -9,6 +9,7 @@ socket.on('hashtag tweet', function (data) {
         blink($(eligible_elements[i]));
     }
 });
+
 socket.on('update cloud', function (data) {
     $('#content1').empty();
     loadCloud(data.hashtagcounts);
@@ -23,55 +24,70 @@ function loadCloud(datasource) {
         mod_hashtagcounts[i].weight = val.count;
         mod_hashtagcounts[i].link = window.location.pathname + val.hashtag;
         mod_hashtagcounts[i].html = { rel: val.hashtag };
+        mod_hashtagcounts[i].afterWordRender = function loadColors() {
+            var changeClass;
+            var count = datasource.length;
+            for (var i = 0; i < count; i++) {
+                if (datasource[i].hashtag == this.attr('rel')) {
+                    if (datasource[i].count_change > 0) {
+                        changeClass = 4 + Math.round(datasource[i].count_change / max_positive * 4);
+                    } else {
+                        changeClass = 4 - Math.round(datasource[i].count_change / max_negative * 4);
+                    }
+                    this.addClass('change'+changeClass);
+                }
+            }
+        };
     });
     
-    $("#content1").jQCloud(mod_hashtagcounts, { width: $(window).width()*0.95, height: $(window).height()*0.95});
-    
-    function loadColors(datasource)
-    {
+    var max_positive = 0;
+    var max_negative = 0;
+    (function countChangeNormalization(datasource) {
         var count = datasource.length;
         for (var i = 0; i < count; i++) {
-            datasource[i].count_change; // NOT FINISHED
+            if (datasource[i].count_change > max_positive) {
+                max_positive = datasource[i].count_change;
+            }
+            if (datasource[i].count_change < max_negative) {
+                max_negative = datasource[i].count_change;
+            }
         }
-    }
+    })(datasource);
+    
+    $("#content1").jQCloud(mod_hashtagcounts, { width: $(window).width()*0.95, height: $(window).height()*0.95});
 }
-
-
 
 function blink(selector) {
     var orig_color;
-    switch ($(selector).attr("class")) {
-        case "w1":
-            orig_color = "#aab5f0";
+    switch ($(selector).attr('class').slice(-1)) {
+        case "0":
+            orig_color = "#0000ff";
             break;
-        case "w2":
-            orig_color = "#99ccee";
+        case "1":
+            orig_color = "#1F00DF";
             break;
-        case "w3":
-            orig_color = "#a0ddff";
+        case "2":
+            orig_color = "#3F00BF";
             break;
-        case "w4":
-            orig_color = "#90c5f0";
+        case "3":
+            orig_color = "#5F009F";
             break;
-        case "w5":
-            orig_color = "#90a0dd";
+        case "4":
+            orig_color = "#7F007F";
             break;
-        case "w6":
-            orig_color = "#90c5f0";
+        case "5":
+            orig_color = "#9F005F";
             break;
-        case "w7":
-            orig_color = "#39d";
+        case "6":
+            orig_color = "#BF003F";
             break;
-        case "w8":
-            orig_color = "#0cf";
+        case "7":
+            orig_color = "#DF001F";
             break;
-        case "w9":
-            orig_color = "#0cf";
+        case "8":
+            orig_color = "#ff0000";
             break;
-        case "w10":
-            orig_color = "#0cf";
-            break;
-    };
+    }
     $(selector).animate({
         color: "#fff"
     }, 500);

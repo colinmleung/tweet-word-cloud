@@ -45,12 +45,11 @@ header {
 }
 
 div.jqcloud span.change0 { color: #0000ff; }
-div.jqcloud span.change1 { color: #E3001C; }
-div.jqcloud span.change2 { color: #C60039; }
-div.jqcloud span.change3 { color: #AA0055; }
-div.jqcloud span.change4 { color: #8E0071; }
-div.jqcloud span.change5 { color: #71008E; }
-div.jqcloud span.change6 { color: #5500AA; }
-div.jqcloud span.change7 { color: #3900C6; }
-div.jqcloud span.change8 { color: #1C00E3; }
-div.jqcloud span.change9 { color: #ff0000; }
+div.jqcloud span.change1 { color: #1F00DF; }
+div.jqcloud span.change2 { color: #3F00BF; }
+div.jqcloud span.change3 { color: #5F009F; }
+div.jqcloud span.change4 { color: #7F007F; }
+div.jqcloud span.change5 { color: #9F005F; }
+div.jqcloud span.change6 { color: #BF003F; }
+div.jqcloud span.change7 { color: #DF001F; }
+div.jqcloud span.change8 { color: #ff0000; }
