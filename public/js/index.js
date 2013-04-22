@@ -1,6 +1,10 @@
 var socket = io.connect('http://localhost');
 socket.emit('join hashtagcloud');
 
+$(function () {
+    loadCloud(hashtagcounts);
+});
+
 var eligible_elements;
 socket.on('hashtag tweet', function (data) {
     eligible_elements = $("span[rel='" + data.hashtag + "']");
@@ -13,6 +17,9 @@ socket.on('hashtag tweet', function (data) {
 socket.on('update cloud', function (data) {
     updateCloud(data.hashtagcounts);
 });
+
+var colorLookupTable = [ "#0000ff", "#1F00DF", "#3F00BF", "#5F009F", "#7F007F", "#9F005F", "#BF003F", "#DF001F", "#ff0000" ];
+var fontSizeLookupTable = [ "100%", "150%", "200%", "250%", "300%", "350%", "400%", "450%", "500%", "550%" ];
 
 function updateCloud(datasource) {
     // calculate range of counts and count changes
@@ -65,70 +72,7 @@ function updateCloud(datasource) {
     }
     
     function changeColorAndSize(selector, dest_color, dest_weight) {
-        var color;
-        switch (dest_color) {
-            case 0:
-                color = "#0000ff";
-                break;
-            case 1:
-                color = "#1F00DF";
-                break;
-            case 2:
-                color = "#3F00BF";
-                break;
-            case 3:
-                color = "#5F009F";
-                break;
-            case 4:
-                color = "#7F007F";
-                break;
-            case 5:
-                color = "#9F005F";
-                break;
-            case 6:
-                color = "#BF003F";
-                break;
-            case 7:
-                color = "#DF001F";
-                break;
-            case 8:
-                color = "#ff0000";
-                break;
-        }
-        var weight;
-        switch (dest_weight) {
-            case 1:
-                weight = "100%";
-                break;
-            case 2:
-                weight = "150%";
-                break;
-            case 3:
-                weight = "200%";
-                break;
-            case 4:
-                weight = "250%";
-                break;
-            case 5:
-                weight = "300%";
-                break;
-            case 6:
-                weight = "350%";
-                break;
-            case 7:
-                weight = "400%";
-                break;
-            case 8:
-                weight = "450%";
-                break;
-            case 9:
-                weight = "500%";
-                break;
-            case 10:
-                weight = "550%";
-                break;
-        }
-        $(selector).animate({ fontSize: weight, color: color }, 500);
+        $(selector).animate({ fontSize: fontSizeLookupTable[dest_weight-1], color: colorLookupTable[color] }, 500);
     }
 }
 
@@ -183,44 +127,10 @@ function loadCloud(datasource) {
 }
 
 function blink(selector) {
-    var orig_color;
-    switch ($(selector).attr('class').slice(-1)) {
-        case "0":
-            orig_color = "#0000ff";
-            break;
-        case "1":
-            orig_color = "#1F00DF";
-            break;
-        case "2":
-            orig_color = "#3F00BF";
-            break;
-        case "3":
-            orig_color = "#5F009F";
-            break;
-        case "4":
-            orig_color = "#7F007F";
-            break;
-        case "5":
-            orig_color = "#9F005F";
-            break;
-        case "6":
-            orig_color = "#BF003F";
-            break;
-        case "7":
-            orig_color = "#DF001F";
-            break;
-        case "8":
-            orig_color = "#ff0000";
-            break;
-    }
     $(selector).animate({
         color: "#ffffff"
     }, 500);
     $(selector).animate({
-        color: orig_color
+        color: colorLookupTable($(selector).attr('class').slice(-1))
     }, 500);
 }
-
-$(function () {
-    loadCloud(hashtagcounts);
-});

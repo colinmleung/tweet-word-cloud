@@ -1,6 +1,10 @@
 {
-  "name": "node_twc_data",
-  "subdomain": "stabbymcknife-node_twc_data",
+  "name": "realtimetagcloud.com",
+  "subdomain": "realtimetagcloud",
+  "domains": [
+    "realtimetagcloud.com",
+    "www.realtimetagcloud.com"
+  ],
   "author": "Colin Leung <colinmleung@gmail.com>",
   "description": "gets 100 most popular twitter hashtags",
   "scripts": {
@@ -12,10 +16,9 @@
     "mongoose": ">=3.5.x",
     "connect": ">=1.9.1",
     "socket.io": "~0.9",
-    "twit": "*",
-    "forever-monitor": "*"
+    "twit": "*"
   },
-  "version": "0.0.1-72",
+  "version": "0.0.1-78",
   "private": true,
   "license": "MIT",
   "engines": {
