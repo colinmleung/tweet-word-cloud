@@ -9,14 +9,17 @@ $(function () {
   })();
   
   function remove() { // calls itself until tweet_array is empty
+    var height;
     console.log('tweetbox length: '+$('div.tweetbox').length);
     if ($('div.tweetbox').length >= 5) {
+      height = "-=" + $('div.tweetbox').first()[0].offsetHeight + "px";
       console.log('removing: ' + $('div.tweetbox').first());
-      $('div.tweetbox').first().fadeOut(1000, function() {
-            this.remove();
+      $('div.tweetbox').first().animate({ opacity: 0 }, 1000, function() {
+        $(this).slideUp(500, function() {
+            $(this).remove();
             add();
+        });
       });
-      
     } else {
       add();
     }
@@ -38,22 +41,11 @@ $(function () {
   var socket = io.connect('http://localhost');
   socket.emit('join tweetfeed', { hashtag: hashtag_name });
   socket.on('tweet', function(data) {
-    /*console.log(data.tweet);
-    var word_array = data.tweet.split(' ');
-    var count = word_array.length;
-    for (var i = 0; i < count; i++) {
-        if (word_array[i].indexOf('#') >= 0 || word_array[i].indexOf('@') >= 0 || word_array[i] === "RT") {
-            word_array[i] = "";
-        }
-    }
-    word_array = $.trim(word_array.join(''));
-    if (word_array !== "") {*/
-        tweet_array.push(data.tweet); // to take out is shift
-        console.log('Tweet_array count @ push: '+tweet_array.length);
-        if (tweet_array.length == 1) {
-          console.log('Remove called');
-          remove();
-        }
-    //}
+      tweet_array.push(data.tweet);
+      console.log('Tweet_array count @ push: '+tweet_array.length);
+      if (tweet_array.length == 1) {
+        console.log('Remove called');
+        remove();
+      }
   });
 });
