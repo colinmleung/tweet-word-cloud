@@ -72,7 +72,7 @@ function updateCloud(datasource) {
     }
     
     function changeColorAndSize(selector, dest_color, dest_weight) {
-        $(selector).animate({ fontSize: fontSizeLookupTable[dest_weight-1], color: colorLookupTable[color] }, 500);
+        $(selector).animate({ fontSize: fontSizeLookupTable[dest_weight-1], color: colorLookupTable[dest_color] }, 500);
     }
 }
 
@@ -123,7 +123,7 @@ function loadCloud(datasource) {
         }
     })(datasource);
     
-    $("#content1").jQCloud(mod_hashtagcounts, { width: $(window).width()*0.95, height: $(window).height()*0.95});
+    $("#content").jQCloud(mod_hashtagcounts, { width: $(window).width()*0.95, height: $(window).height()*0.95});
 }
 
 function blink(selector) {
@@ -131,6 +131,6 @@ function blink(selector) {
         color: "#ffffff"
     }, 500);
     $(selector).animate({
-        color: colorLookupTable($(selector).attr('class').slice(-1))
+        color: colorLookupTable[$(selector).attr('class').slice(-1)]
     }, 500);
 }

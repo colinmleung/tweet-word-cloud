@@ -1,17 +1,17 @@
 extends layout
 
 block title
-    title Tweet Word Cloud
+    title realtimetagcloud
     
 block append styles
     link(rel='stylesheet', type='text/css', href='/styles/jqcloud.css')
     link(rel='stylesheet', type='text/css', href='/styles/index.css')
 
 block content
-    div#content1
+    div#content
     
 block append scripts
     script(type='text/javascript')
-            var hashtagcounts = $.parseJSON(!{JSON.stringify(data)});
+        var hashtagcounts = $.parseJSON(!{JSON.stringify(data)});
     script(type='text/javascript', src='/js/libs/jqcloud.js')
     script(type='text/javascript', src='/js/index.js')

@@ -1,19 +1,26 @@
-// Set up server
+/*************************** Setup *********************************/
+
+// Instantiate the application
 var express = require('express')
   , app = express()
   , server = require('http').createServer(app)
   , io = require('socket.io').listen(server);
 server.listen(8080);
 
-// Import credentials for DB and Twitter Stream
+// Import credentials for DB and Twitter
 var credentials = require('./credentials.js');
 
-// Set up ORM
+// Connect to Twitter
+var Twit = require('twit');
+var T = new Twit(credentials.twitter_access);
+var stream = T.stream('statuses/sample');
+
+// Import models
 var mongoose = require('mongoose');
 var HashtagCount = require('./models/HashtagCount')(mongoose);
 var Tweet = require('./models/Tweet')(mongoose, HashtagCount);
 
-// Configure the applicaiton
+// Set application configuration details
 app.configure(function () {
     app.set('view engine', 'jade');
     app.set('view options', { layout: true });
@@ -26,58 +33,64 @@ app.configure(function () {
     });
 });
 
-// Index
+// Create socket.io rooms
+io.sockets.on('connection', function (socket) {
+  socket.on('join tweetfeed', function (data) {
+    socket.join(data.hashtag);
+  });
+  socket.on('join hashtagcloud', function (data) {
+    socket.join('hashtagcloud');
+  });
+});
+
+/*************************** Pages *********************************/
+
+// Tag Cloud Page
 app.get('/', function (req, res) {
     HashtagCount.getList(function(err, docs) {
         res.render('index.jade', {data: JSON.stringify(docs)});
     });
 });
 
-// Hashtag Rooms
+// Tweetfeed Page
 app.get('/:hashtag', function (req, res) {
 	var hashtag = req.params.hashtag;
     res.render('tweetfeed.jade', { data: JSON.stringify(hashtag) });
 });
 
+/********** Tweets Import and Hashtag Count Calculation ************/
 
-/*****************************************/
+var top_hashtag_list = []; // Keeps a record of the top hashtags
 
-// Connect to Twitter through the twit library
-var Twit = require('twit');
-var T = new Twit(credentials.twitter_access);
-var stream = T.stream('statuses/sample');
-
-var top_hashtag_list = [];
-
-// Stream tweets from Twitter
 stream.on('tweet', function (tweet) {
     if (tweet && tweet.id && tweet.entities && tweet.entities.hashtags && tweet.entities.hashtags.length > 0) {
+
         var hashtags = [];
         var count = tweet.entities.hashtags.length;
         for (var i = 0; i < count; i++) {
             hashtags[i] = tweet.entities.hashtags[i].text;
         }
         
-        // emit socket.io messages if tweet contains top 100 hashtags
+        // send tweetfeeds new tweet
         emitTweet(hashtags, tweet.text);
 
-        // add new tweets to the mongodb database
+        // add tweet to DB
         Tweet.add(tweet.id, hashtags);        
     }
 });
 
-// Send relevant tweets for hashtag rooms
+// sends tweet data to the right rooms
 function emitTweet (hashtags, text) {
-    // find hashtags in top 100
+
     var good_hashtags = getIntersect(hashtags, top_hashtag_list);
-    
-    // emit tweet in socket.io rooms with relevant hashtags
+
     var length = good_hashtags.length;
     for (var i = 0; i < length; i++) {
         io.sockets.in(good_hashtags[i]).emit('tweet', { tweet: text });
         io.sockets.in('hashtagcloud').emit('hashtag tweet', { hashtag: good_hashtags[i] });
     }
     
+    // retrieves the intersection of two arrays
     function getIntersect(arr1, arr2) {
      var r = [], o = {}, l = arr2.length, i, v;
      for (i = 0; i < l; i++) {
@@ -94,7 +107,7 @@ function emitTweet (hashtags, text) {
     }
 }
 
-// Pushes top 100 hashtags to top_hashtag_list every 60 seconds
+// updates the list of top hashtags in the DB, and assigns it to top_hashtag_list
 setInterval(function() {
     Tweet.countTags(function (err, docs) {
         HashtagCount.getList(function (err, docs) {
@@ -102,19 +115,12 @@ setInterval(function() {
             for (var i = 0; i < length; i++) {
                 top_hashtag_list[i] = docs[i].hashtag;
             }
-
+            
+            // send tag clouds updated hashtag data
             io.sockets.in('hashtagcloud').emit('update cloud', { hashtagcounts: docs });
         });
     });
 }, 60000);
 
-// Connect pages to hashtag rooms
-io.sockets.on('connection', function (socket) {
-  socket.on('join tweetfeed', function (data) {
-    socket.join(data.hashtag);
-  });
-  socket.on('join hashtagcloud', function (data) {
-    socket.join('hashtagcloud');
-  });
-});
+
 
