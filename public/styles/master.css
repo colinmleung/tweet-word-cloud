@@ -6,44 +6,6 @@ body {
     overflow: hidden;
 }
 
-header {
-    padding: 1% 7% 1% 1%;
-    width: 25%;
-    word-wrap: break-word;
-    float: left;
-}
-
-.tweetbox {
-    font-family: "Helvetica", "Arial", sans-serif;
-    font-size: 20px;
-    line-height: normal;
-    color: white;
-    text-align: left;
-    word-wrap: break-word;
-    padding: 3%;
-    border-style: solid none none none;
-    border-width: 1px;
-    border-color: white;
-    display: none;
-}
-
-#content {
-    width: 33%;
-    padding: 3% 1% 3% 1%;
-    margin: 0px auto;
-    height: 94%;
-    float: left;
-    overflow: hidden;
-}
-
-header {
-    font-family: "Helvetica", "Arial", sans-serif;
-    font-size: 20px;
-    line-height: normal;
-    color: white;
-    text-align: left;
-}
-
 footer {
     font-family: "Helvetica", "Arial", sans-serif;
     font-size: 10px;
@@ -54,46 +16,14 @@ footer {
     top: 95%;
 }
 
-footer h1{
+footer h1 {
     float: left;
     margin-top: 0px;
     margin-left: 10px;
 }
 
-footer p{
+footer p {
     float: left;
     margin-top: 9px;
     margin-left: 5px;
 }
-
-#footer {
-    font-family: "Helvetica", "Arial", sans-serif;
-    font-size: 10px;
-    line-height: normal;
-    color: white;
-    text-align: left;
-    position: absolute;
-    top: 95%;
-}
-
-#footer h1 {
-    float: left;
-    margin-top: 0px;
-    margin-left: 10px;
-}
-
-#footer p{
-    float: left;
-    margin-top: 9px;
-    margin-left: 5px;
-}
-
-div.jqcloud span.change0 { color: #0000ff; }
-div.jqcloud span.change1 { color: #1F00DF; }
-div.jqcloud span.change2 { color: #3F00BF; }
-div.jqcloud span.change3 { color: #5F009F; }
-div.jqcloud span.change4 { color: #7F007F; }
-div.jqcloud span.change5 { color: #9F005F; }
-div.jqcloud span.change6 { color: #BF003F; }
-div.jqcloud span.change7 { color: #DF001F; }
-div.jqcloud span.change8 { color: #ff0000; }
