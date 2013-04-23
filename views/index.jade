@@ -1,18 +1,16 @@
-!!! 5
-html(lang='en')
-    head
-        title Tweet Word Cloud
-        link(rel='stylesheet', type='text/css', href='/styles/jqcloud.css')
-        link(rel='stylesheet', type='text/css', href='/styles/master.css')
-    body
-        div#content1
-        footer
-            h1 realtimetagcloud
-            p by Colin Leung
-        script(type='text/javascript', src='http://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js')
-        script(type='text/javascript', src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js')
-        script(type='text/javascript')
+extends layout
+
+block title
+    title Tweet Word Cloud
+    
+block append styles
+    link(rel='stylesheet', type='text/css', href='/styles/jqcloud.css')
+
+block content
+    div#content1
+    
+block append scripts
+    script(type='text/javascript')
             var hashtagcounts = $.parseJSON(!{JSON.stringify(data)});
-        script(type='text/javascript', src='/js/libs/jqcloud.js')
-        script(type='text/javascript', src='/socket.io/socket.io.js')
-        script(type='text/javascript', src='/js/index.js')
+    script(type='text/javascript', src='/js/libs/jqcloud.js')
+    script(type='text/javascript', src='/js/index.js')
