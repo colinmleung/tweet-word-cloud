@@ -45,17 +45,21 @@ io.sockets.on('connection', function (socket) {
 
 /*************************** Pages *********************************/
 
+// Tweetfeed Page
+app.get('/:hashtag', function (req, res, next) {
+	var hashtag = req.params.hashtag;
+	if (top_hashtag_list.indexOf(hashtag) !== -1) {
+		res.render('tweetfeed.jade', { data: JSON.stringify(hashtag) });
+	} else {
+		next();
+	}
+});
+
 // Tag Cloud Page
 app.get('/', function (req, res) {
     HashtagCount.getList(function(err, docs) {
         res.render('index.jade', {data: JSON.stringify(docs)});
     });
-});
-
-// Tweetfeed Page
-app.get('/:hashtag', function (req, res) {
-	var hashtag = req.params.hashtag;
-    res.render('tweetfeed.jade', { data: JSON.stringify(hashtag) });
 });
 
 /********** Tweets Import and Hashtag Count Calculation ************/
