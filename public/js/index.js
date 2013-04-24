@@ -68,7 +68,7 @@ function updateCloud(datasource) {
             }
         }
         console.log('datasource['+i+'].hashtag: '+datasource[i].hashtag);
-        changeColorAndSize("span[rel='" + datasource[i].hashtag + "'] a", dest_color, dest_weight);
+        changeColorAndSize("span[rel='" + datasource[i].hashtag + "']", dest_color, dest_weight);
     }
     
     function changeColorAndSize(selector, dest_color, dest_weight) {
