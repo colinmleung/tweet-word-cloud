@@ -51,7 +51,7 @@ app.get('/:hashtag', function (req, res, next) {
 	if (top_hashtag_list.indexOf(hashtag) !== -1) {
 		res.render('tweetfeed.jade', { data: JSON.stringify(hashtag) });
 	} else {
-		next();
+		res.redirect('/');
 	}
 });
 
