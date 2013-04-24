@@ -5,11 +5,16 @@ $(function () {
   socket.emit('join tweetfeed', { hashtag: hashtag_name });
   
   var tweet_array = []; // buffer array to hold tweets until they're displayed
+
   socket.on('tweet', function(data) {
       tweet_array.push(data.tweet);
       if (tweet_array.length == 1) {  // when the buffer gets it's first tweet,
         displayNewTweets();           // call a recursive function that displays 
       }                               // tweets until the buffer is empty
+  });
+
+  socket.on('close', function () {
+	window.location.replace('/');
   });
   
   // if there are already five tweets displayed, handle the old ones
