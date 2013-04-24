@@ -76,7 +76,7 @@ function updateCloud(datasource) {
                     }
                 }
                 //console.log('datasource['+j+'].hashtag: '+datasource[j].hashtag);
-                changeColorAndSize("span[rel='" + datasource[j].hashtag + "']", dest_color, dest_weight);
+                changeColorAndSize(datasource[j].hashtag, dest_color, dest_weight);
                 
                 // eliminate data from datasource
                 datasource.splice(j, 1);
@@ -113,11 +113,15 @@ function updateCloud(datasource) {
             }
         }
         
-        changeColorAndSize("span[rel='" + datasource[i].hashtag + "']", dest_color, dest_weight);
+        changeColorAndSize(datasource[i].hashtag, dest_color, dest_weight);
     }
     
-    function changeColorAndSize(selector, dest_color, dest_weight) {
-        $(selector).animate({ fontSize: fontSizeLookupTable[dest_weight-1], color: colorLookupTable[dest_color] }, 500);
+    function changeColorAndSize(hashtag, dest_color, dest_weight) {
+		$.expr[':'].textEquals = function(a, i, m) {
+			return $(a).text().match("^" + m[3] + "$");
+		};
+		
+        $("span:textEquals('" + hashtag + "')").animate({ fontSize: fontSizeLookupTable[dest_weight-1], color: colorLookupTable[dest_color] }, 500);
     }
 }
 
