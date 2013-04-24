@@ -44,14 +44,59 @@ function updateCloud(datasource) {
     }
     /*console.log('max_count: ' + max_count);
     console.log('min_count: ' + min_count);*/
-    console.log('max_count_change: '+max_count_change);
-    console.log('min_count_change: '+min_count_change);
+    //console.log('max_count_change: '+max_count_change);
+    //console.log('min_count_change: '+min_count_change);
     
     // calculate and change to destination colors and sizes
+    var cloud_elements = $('div span')
+    var cloud_count = $('div span').length;
+    
     var dest_color, dest_weight;
-    for (var i = 0; i < count; i++) {
-        console.log('datasource['+i+'].count: '+datasource[i].count);
-        console.log('datasource['+i+'].count_change: '+datasource[i].count_change);
+    console.log('START NEW ');
+    var found;
+    for (var i = 0; i < cloud_count; i++) {
+        found = false;
+        for (var j = 0; j < datasource.length; j++) {
+            if (datasource[j].hashtag == $(cloud_elements[i]).attr('rel')) {
+                //console.log('datasource['+j+'].count: '+datasource[j].count);
+                //console.log('datasource['+j+'].count_change: '+datasource[j].count_change);
+                dest_weight = Math.round((datasource[j].count - min_count) / (max_count - min_count) * 9.0) + 1;
+                //console.log('dest_weight: '+dest_weight);
+                if (datasource[j].count_change > 0) {
+                    if (max_count_change !== 0) {
+                        dest_color = 4 + Math.round(datasource[j].count_change / max_count_change * 4);
+                    } else {
+                        dest_color = 4;
+                    }
+                } else {
+                    if (min_count_change !== 0) {
+                        dest_color = 4 - Math.round(datasource[j].count_change / min_count_change * 4);
+                    } else {
+                        dest_color = 4;
+                    }
+                }
+                //console.log('datasource['+j+'].hashtag: '+datasource[j].hashtag);
+                changeColorAndSize("span[rel='" + datasource[j].hashtag + "']", dest_color, dest_weight);
+                
+                // eliminate data from datasource
+                datasource.splice(j, 1);
+                found = true;
+            }
+        }
+        if (found == false) {
+            $(cloud_elements[i]).addClass('replace');
+            console.log($(cloud_elements[i]).attr('rel') + ' marked for replacement');
+        }
+    }
+    
+    // replace these words with new ones
+    for (var i = 0; i < datasource.length; i++) {
+        //change text and rel
+        console.log($('div span.replace').first().attr('rel') + " getting replaced with " + datasource[i].hashtag);
+        $('div span.replace').first().attr('rel', datasource[i].hashtag).removeClass('replace');
+        // add link
+        $("span[rel='" + datasource[i].hashtag + "']").append('<a href="/'+ datasource[i].hashtag +'">'+ datasource[i].hashtag +'</a>');
+        
         dest_weight = Math.round((datasource[i].count - min_count) / (max_count - min_count) * 9.0) + 1;
         //console.log('dest_weight: '+dest_weight);
         if (datasource[i].count_change > 0) {
@@ -67,7 +112,7 @@ function updateCloud(datasource) {
                 dest_color = 4;
             }
         }
-        console.log('datasource['+i+'].hashtag: '+datasource[i].hashtag);
+        
         changeColorAndSize("span[rel='" + datasource[i].hashtag + "']", dest_color, dest_weight);
     }
     
