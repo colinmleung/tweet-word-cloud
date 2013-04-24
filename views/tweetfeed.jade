@@ -1,17 +1,14 @@
 extends layout
 
 block title
-    title #{"#"+data.replace(/"/g, "")}
-    header #{"#"+data.replace(/"/g, "")}
+    hashtag_title = '#'+data.replace(/"/g, '');
+    title= hashtag_title
+    header= hashtag_title
 
 block append styles
     link(rel='stylesheet', type='text/css', href='/styles/tweetfeed.css')
 
-block content
-    div#content
-
 block append scripts
     script(type='text/javascript')
         var hashtag_name = $.parseJSON(!{JSON.stringify(data)});
-    script(type='text/javascript', src='/socket.io/socket.io.js')
     script(type='text/javascript', src='/js/tweetfeed.js')
