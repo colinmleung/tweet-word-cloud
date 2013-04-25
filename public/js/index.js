@@ -5,13 +5,13 @@ $(function () {
     loadCloud(hashtagcounts);
 });
 
+$.expr[':'].textEquals = function(a, i, m) {
+	return $(a).text().match("^" + m[3] + "$");
+};
+
 var eligible_elements;
 socket.on('hashtag tweet', function (data) {
-    eligible_elements = $("span[rel='" + data.hashtag + "']");
-    var length = eligible_elements.length;
-    for (var i = 0; i < length; i++) {
-        blink($(eligible_elements[i]));
-    }
+	blink("a:textEquals('" + data.hashtag + "')");
 });
 
 socket.on('update cloud', function (data) {
@@ -117,10 +117,6 @@ function updateCloud(datasource) {
     }
     
     function changeColorAndSize(hashtag, dest_color, dest_weight) {
-		$.expr[':'].textEquals = function(a, i, m) {
-			return $(a).text().match("^" + m[3] + "$");
-		};
-		
         $("span:textEquals('" + hashtag + "')").animate({ fontSize: fontSizeLookupTable[dest_weight-1] }, 500);
 		$("a:textEquals('" + hashtag + "')").animate({ color: colorLookupTable[dest_color] }, 500);
     }
@@ -181,6 +177,6 @@ function blink(selector) {
         color: "#ffffff"
     }, 500);
     $(selector).animate({
-        color: colorLookupTable[$(selector).attr('class').slice(-1)]
+        color: colorLookupTable[$(selector).parent().attr('class').slice(-1)]
     }, 500);
 }
