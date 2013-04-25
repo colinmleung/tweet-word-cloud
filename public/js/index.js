@@ -11,7 +11,7 @@ $.expr[':'].textEquals = function(a, i, m) {
 
 var eligible_elements;
 socket.on('hashtag tweet', function (data) {
-	blink("a:textEquals('" + data.hashtag + "')");
+	blink("span:textEquals('" + data.hashtag + "')");
 });
 
 socket.on('update cloud', function (data) {
@@ -117,8 +117,7 @@ function updateCloud(datasource) {
     }
     
     function changeColorAndSize(hashtag, dest_color, dest_weight) {
-        $("span:textEquals('" + hashtag + "')").animate({ fontSize: fontSizeLookupTable[dest_weight-1] }, 500);
-		$("a:textEquals('" + hashtag + "')").animate({ color: colorLookupTable[dest_color] }, 500);
+        $("span:textEquals('" + hashtag + "')").animate({ fontSize: fontSizeLookupTable[dest_weight-1], color: colorLookupTable[dest_color] }, 1000);
     }
 }
 
@@ -150,6 +149,7 @@ function loadCloud(datasource) {
                         }
                     }
                     this.addClass('change'+changeClass);
+                    console.log(changeClass + ' LOADED');
                 }
             }
         };
@@ -177,6 +177,6 @@ function blink(selector) {
         color: "#ffffff"
     }, 500);
     $(selector).animate({
-        color: colorLookupTable[$(selector).parent().attr('class').slice(-1)]
+        color: colorLookupTable[$(selector).attr('class').slice(-1)]
     }, 500);
 }
