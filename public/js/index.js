@@ -95,7 +95,7 @@ function updateCloud(datasource) {
         console.log($('div span.replace').first().attr('rel') + " getting replaced with " + datasource[i].hashtag);
         $('div span.replace').first().attr('rel', datasource[i].hashtag).removeClass('replace');
         // add link
-        $("span[rel='" + datasource[i].hashtag + "']").append('<a href="/'+ datasource[i].hashtag +'">'+ datasource[i].hashtag +'</a>');
+        $("span:textEquals('" + datasource[i].hashtag + "')").append('<a href="/'+ datasource[i].hashtag +'">'+ datasource[i].hashtag +'</a>');
         
         dest_weight = Math.round((datasource[i].count - min_count) / (max_count - min_count) * 9.0) + 1;
         //console.log('dest_weight: '+dest_weight);
