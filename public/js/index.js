@@ -121,7 +121,8 @@ function updateCloud(datasource) {
 			return $(a).text().match("^" + m[3] + "$");
 		};
 		
-        $("span:textEquals('" + hashtag + "')").animate({ fontSize: fontSizeLookupTable[dest_weight-1], color: colorLookupTable[dest_color] }, 500);
+        $("span:textEquals('" + hashtag + "')").animate({ fontSize: fontSizeLookupTable[dest_weight-1] }, 500);
+		$("a:textEquals('" + hashtag + "')").animate({ color: colorLookupTable[dest_color] }, 500);
     }
 }
 
