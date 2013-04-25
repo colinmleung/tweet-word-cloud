@@ -32,16 +32,14 @@ $(function () {
   function addNewTweet() {
     var tweet = tweet_array[0];
     $('div#content').append('<div class="tweetbox">' + tweet + '</div>');
-    
+    handleTweetfeed();
+  }
+  
+  function handleTweetfeed() {
     if ($('body')[0].clientHeight > $(window).height()*0.95 ) {
         removeOldTweet(function () {
-            $('div.tweetbox').last().fadeIn(1000, function() {
-              tweet_array.shift();
-              if (tweet_array.length > 0) {
-                addNewTweet();
-              }
-            });
-        });
+            handleTweetfeed();
+        })
     } else {
         $('div.tweetbox').last().fadeIn(1000, function() {
           tweet_array.shift();
