@@ -9,22 +9,13 @@ $(function () {
   socket.on('tweet', function(data) {
       tweet_array.push(data.tweet);
       if (tweet_array.length == 1) {  // when the buffer gets it's first tweet,
-        displayNewTweets();           // call a recursive function that displays 
+        addNewTweet();           // call a recursive function that displays 
       }                               // tweets until the buffer is empty
   });
 
   socket.on('close', function () {
 	window.location.replace('/');
   });
-  
-  // if there are already five tweets displayed, handle the old ones
-  function displayNewTweets() {
-    if ($('div.tweetbox').length >= 5) {
-      removeOldTweet(addNewTweet);
-    } else {
-      addNewTweet();
-    }
-  };
   
   // fade out the oldest tweet and slide up the remaining tweets
   function removeOldTweet(callback) {
@@ -41,12 +32,24 @@ $(function () {
   function addNewTweet() {
     var tweet = tweet_array[0];
     $('div#content').append('<div class="tweetbox">' + tweet + '</div>');
-    $('div.tweetbox').last().fadeIn(1000, function() {
-      tweet_array.shift();
-      if (tweet_array.length > 0) {
-        displayNewTweets();
-      }
-    });
+    
+    if ($('body')[0].clientHeight > $(window).height()*0.95 ) {
+        removeOldTweet(function () {
+            $('div.tweetbox').last().fadeIn(1000, function() {
+              tweet_array.shift();
+              if (tweet_array.length > 0) {
+                addNewTweet();
+              }
+            });
+        });
+    } else {
+        $('div.tweetbox').last().fadeIn(1000, function() {
+          tweet_array.shift();
+          if (tweet_array.length > 0) {
+            addNewTweet();
+          }
+        });
+    }
   }
 
   // hashtag header pulses until a tweet is displayed
@@ -57,5 +60,4 @@ $(function () {
         }
     });
   })();
-
 });
