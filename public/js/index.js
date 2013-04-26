@@ -93,7 +93,7 @@ function updateCloud(datasource) {
     for (var i = 0; i < datasource.length; i++) {
         //change text and rel
         console.log($('div span.replace').first().attr('rel') + " getting replaced with " + datasource[i].hashtag);
-        $('div span.replace').first().attr('rel', datasource[i].hashtag).removeClass('replace');
+        $('div span.replace').first().attr('rel', datasource[i].hashtag).removeClass('replace').empty();
         // add link
         $("span:textEquals('" + datasource[i].hashtag + "')").append('<a href="/'+ datasource[i].hashtag +'">'+ datasource[i].hashtag +'</a>');
         
@@ -176,6 +176,9 @@ function blink(selector) {
     $(selector).animate({
         color: "#ffffff"
     }, 500);
+    if (!($(selector).attr('class'))) {
+        console.log("BAD SELECTOR: " + selector);
+    }
     $(selector).animate({
         color: colorLookupTable[$(selector).attr('class').slice(-1)]
     }, 500);
