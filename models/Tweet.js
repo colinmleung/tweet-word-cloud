@@ -33,10 +33,13 @@ module.exports = function(mongoose, HashtagCount) {
         o.out = { inline: 1 }
         o.verbose = true;
         o.finalize = function (key, values) {
-            
             return new Array(key, values);
         }
         Tweet.mapReduce(o, function(err, docs){
+            
+            if (err) {
+                console.log(err);
+            }
             
             docs.sort(compareHashtagCounts);
             docs = docs.slice(0,50);
