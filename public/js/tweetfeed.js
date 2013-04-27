@@ -9,7 +9,7 @@ $(function () {
   socket.on('tweet', function(data) {
       tweet_array.push(data.tweet);
       if (tweet_array.length == 1) {  // when the buffer gets it's first tweet,
-        addNewTweet();           // call a recursive function that displays 
+        addNewTweet();                // call a recursive function that displays 
       }                               // tweets until the buffer is empty
   });
 
@@ -36,12 +36,12 @@ $(function () {
   }
   
   function handleTweetfeed() {
-    if ($('body')[0].clientHeight > $(window).height()*0.95 ) {
+    if ($('body')[0].clientHeight > $(window).height()) {
         removeOldTweet(function () {
             handleTweetfeed();
-        })
+        });
     } else {
-        $('div.tweetbox').last().fadeIn(1000, function() {
+        $('div.tweetbox').last().animate({ opacity: 1 }, 1000, function() {
           tweet_array.shift();
           if (tweet_array.length > 0) {
             addNewTweet();
