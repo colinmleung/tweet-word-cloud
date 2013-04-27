@@ -84,6 +84,15 @@ stream.on('tweet', function (tweet) {
     }
 });
 
+stream.on('disconnect', function (disconnectMessage) {
+    console.log("TWITTER DISCONNECT MESSAGE: " + disconnectMessage);
+    stream.start();
+});
+
+stream.on('warning', function (warning) {
+    console.log("TWITTER WARNING:" + warning);
+});
+
 // sends tweet data to the right rooms
 function emitTweet (hashtags, text) {
 
