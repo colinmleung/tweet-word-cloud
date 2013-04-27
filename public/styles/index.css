@@ -7,3 +7,5 @@ div.jqcloud span.change5 { color: #9F005F; }
 div.jqcloud span.change6 { color: #BF003F; }
 div.jqcloud span.change7 { color: #DF001F; }
 div.jqcloud span.change8 { color: #ff0000; }
+
+div.jqcloud a:hover { color: #ffffff; }
