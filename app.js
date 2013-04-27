@@ -147,11 +147,10 @@ setInterval(function() {
             });
         } else {
             HashtagCount.remove(function () {
-                    io.sockets.in('hashtagcloud').emit('no tags');
-                    var old_length = old_hashtag_list.length;
-                    for (var i = 0; i < old_length; i++) {
-                        io.sockets.in(old_hashtag_list[i]).emit('close');
-                    }
+                io.sockets.in('hashtagcloud').emit('no tags');
+                var old_length = old_hashtag_list.length;
+                for (var i = 0; i < old_length; i++) {
+                    io.sockets.in(old_hashtag_list[i]).emit('close');
                 }
             });
         }
