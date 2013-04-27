@@ -15,6 +15,10 @@ module.exports = function(mongoose, HashtagCount) {
         tweet_doc.save();
     }
     
+    var count = function (callback) {
+        Tweet.count({}, callback);
+    }
+    
     var countTags = function (callback) {
         var o = {};
         o.map = function () {
@@ -86,6 +90,7 @@ module.exports = function(mongoose, HashtagCount) {
 
     return {
         add: add,
+        count: count,
         countTags: countTags,
         Tweet: Tweet
     }

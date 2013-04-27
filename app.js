@@ -123,26 +123,40 @@ function emitTweet (hashtags, text) {
 
 // updates the list of top hashtags in the DB, and assigns it to top_hashtag_list
 setInterval(function() {
-    Tweet.countTags(function (err, docs) {
-        HashtagCount.getList(function (err, docs) {
-			old_hashtag_list = top_hashtag_list.slice(0);
-            var length = docs.length;
-            for (var i = 0; i < length; i++) {
-                top_hashtag_list[i] = docs[i].hashtag;
-            }
-            
-            // send tag clouds updated hashtag data
-            io.sockets.in('hashtagcloud').emit('update cloud', { hashtagcounts: docs });
-			
-			// kick people out of expired hashtag rooms
-			var old_length = old_hashtag_list.length;
-			for (var i = 0; i < old_length; i++) {
-				if (top_hashtag_list.indexOf(old_hashtag_list[i]) === -1) {
-					io.sockets.in(old_hashtag_list[i]).emit('close');
-				}
-			}
-        });
+    Tweet.count(function (err, count) {
+        if (count > 0) {
+            Tweet.countTags(function (err, docs) {
+                HashtagCount.getList(function (err, docs) {
+                    old_hashtag_list = top_hashtag_list.slice(0);
+                    var length = docs.length;
+                    for (var i = 0; i < length; i++) {
+                        top_hashtag_list[i] = docs[i].hashtag;
+                    }
+                    
+                    // send tag clouds updated hashtag data
+                    io.sockets.in('hashtagcloud').emit('update cloud', { hashtagcounts: docs });
+                    
+                    // kick people out of expired hashtag rooms
+                    var old_length = old_hashtag_list.length;
+                    for (var i = 0; i < old_length; i++) {
+                        if (top_hashtag_list.indexOf(old_hashtag_list[i]) === -1) {
+                            io.sockets.in(old_hashtag_list[i]).emit('close');
+                        }
+                    }
+                });
+            });
+        } else {
+            HashtagCount.remove(function () {
+                    io.sockets.in('hashtagcloud').emit('no tags');
+                    var old_length = old_hashtag_list.length;
+                    for (var i = 0; i < old_length; i++) {
+                        io.sockets.in(old_hashtag_list[i]).emit('close');
+                    }
+                }
+            });
+        }
     });
+    
 }, 60000);
 
 

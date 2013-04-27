@@ -15,7 +15,15 @@ socket.on('hashtag tweet', function (data) {
 });
 
 socket.on('update cloud', function (data) {
-    updateCloud(data.hashtagcounts);
+    if ($('div span').length === 0) {
+        loadCloud(hashtagcounts);
+    } else {
+        updateCloud(data.hashtagcounts);
+    }
+});
+
+socket.on('no tags', function () {
+    printNoTagsMsg();
 });
 
 var colorLookupTable = [ "#0000ff", "#1F00DF", "#3F00BF", "#5F009F", "#7F007F", "#9F005F", "#BF003F", "#DF001F", "#ff0000" ];
@@ -182,4 +190,8 @@ function blink(selector) {
     $(selector).animate({
         color: colorLookupTable[$(selector).attr('class').slice(-1)]
     }, 500);
+}
+
+function printNoTagsMsg() {
+    $('content').empty().append('Waiting on tweets...');
 }
