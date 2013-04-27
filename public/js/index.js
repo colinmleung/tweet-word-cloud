@@ -2,21 +2,25 @@ var socket = io.connect('http://localhost');
 socket.emit('join hashtagcloud');
 
 $(function () {
-    loadCloud(hashtagcounts);
+    loadCloud(hashtagcounts, '#content');
 });
-
-$.expr[':'].textEquals = function(a, i, m) {
-	return $(a).text().match("^" + m[3] + "$");
-};
 
 var eligible_elements;
 socket.on('hashtag tweet', function (data) {
-	blink("span:textEquals('" + data.hashtag + "')");
+    eligible_elements = $("span:textEquals('" + data.hashtag + "')");
+    var length = eligible_elements.length;
+    for (var i = 0; i < length; i++) {
+        blink($(eligible_elements[i]));
+    }
 });
+
+$.expr[':'].textEquals = function(a, i, m) { 
+    return $(a).text().match("^" + m[3] + "$"); 
+};
 
 socket.on('update cloud', function (data) {
     if ($('div span').length === 0) {
-        loadCloud(hashtagcounts);
+        loadCloud(hashtagcounts, '#content');
     } else {
         updateCloud(data.hashtagcounts);
     }
@@ -129,7 +133,7 @@ function updateCloud(datasource) {
     }
 }
 
-function loadCloud(datasource) {
+function loadCloud(datasource, target_sel) {
     var mod_hashtagcounts = [];
 
     $.map(datasource, function(val, i) {
@@ -157,7 +161,6 @@ function loadCloud(datasource) {
                         }
                     }
                     this.addClass('change'+changeClass);
-                    console.log(changeClass + ' LOADED');
                 }
             }
         };
@@ -177,13 +180,13 @@ function loadCloud(datasource) {
         }
     })(datasource);
     
-    $("#content").jQCloud(mod_hashtagcounts, { width: $(window).width()*0.95, height: $(window).height()*0.95});
+    $(target_sel).jQCloud(mod_hashtagcounts, { width: $(window).width()*0.95, height: $(window).height()*0.95});
 }
 
 function blink(selector) {
     $(selector).animate({
         color: "#ffffff"
-    }, 500);
+    }, 500);    
     if (!($(selector).attr('class'))) {
         console.log("BAD SELECTOR: " + selector);
     }
