@@ -15,7 +15,7 @@
     "jade": ">=0.0.1",
     "mongoose": ">=3.5.x",
     "connect": ">=1.9.1",
-    "socket.io": "~0.9",
+    "socket.io": "0.9.0",
     "twit": "*"
   },
   "version": "0.0.1-78",
