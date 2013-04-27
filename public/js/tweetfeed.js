@@ -36,7 +36,7 @@ $(function () {
   }
   
   function handleTweetfeed() {
-    if ($('body')[0].clientHeight > $(window).height()*0.95 ) {
+    if ($('body')[0].clientHeight > $(window).height()*0.90 ) {
         removeOldTweet(function () {
             handleTweetfeed();
         })
