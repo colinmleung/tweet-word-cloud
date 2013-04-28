@@ -15,13 +15,13 @@
     "jade": ">=0.0.1",
     "mongoose": ">=3.5.x",
     "connect": ">=1.9.1",
-    "socket.io": "0.9.0",
+    "socket.io": "0.9.6",
     "twit": "*"
   },
-  "version": "0.0.1-78",
+  "version": "0.0.1-84",
   "private": true,
   "license": "MIT",
   "engines": {
-    "node": "0.10.x"
+    "node": "0.8.x"
   }
 }
