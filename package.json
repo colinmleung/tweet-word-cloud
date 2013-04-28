@@ -18,7 +18,7 @@
     "socket.io": "0.9.6",
     "twit": "*"
   },
-  "version": "0.0.1-84",
+  "version": "0.0.1-87",
   "private": true,
   "license": "MIT",
   "engines": {

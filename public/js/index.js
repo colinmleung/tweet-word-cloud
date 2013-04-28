@@ -1,4 +1,4 @@
-var socket = io.connect('http://localhost');
+var socket = io.connect('http://www.realtimetagcloud.com');
 socket.emit('join hashtagcloud');
 
 $(function () {
