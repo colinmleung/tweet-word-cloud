@@ -9,3 +9,8 @@ div.jqcloud span.change7 { color: #DF001F; }
 div.jqcloud span.change8 { color: #ff0000; }
 
 div.jqcloud a:hover { color: #ffffff; }
+
+.hidden {
+    display: none;
+    visibility: hidden;
+}
