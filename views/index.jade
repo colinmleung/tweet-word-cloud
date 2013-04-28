@@ -2,6 +2,9 @@ extends layout
 
 block title
     title realtimetagcloud
+
+block append content
+    div#contentupdate.hidden
     
 block append styles
     link(rel='stylesheet', type='text/css', href='/styles/jqcloud.css')
@@ -11,4 +14,5 @@ block append scripts
     script(type='text/javascript')
         var hashtagcounts = $.parseJSON(!{JSON.stringify(data)});
     script(type='text/javascript', src='/js/libs/jqcloud.js')
+    script(type='text/javascript', src='/js/libs/jquery.quicksand.js')
     script(type='text/javascript', src='/js/index.js')

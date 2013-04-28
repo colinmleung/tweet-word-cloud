@@ -22,7 +22,8 @@ socket.on('update cloud', function (data) {
     if ($('div span').length === 0) {
         loadCloud(hashtagcounts, '#content');
     } else {
-        updateCloud(data.hashtagcounts);
+        loadCloud(hashtagcounts, '#contentupdate');
+        //$('#content').quicksand($('#contentupdate span'));
     }
 });
 
@@ -33,7 +34,7 @@ socket.on('no tags', function () {
 var colorLookupTable = [ "#0000ff", "#1F00DF", "#3F00BF", "#5F009F", "#7F007F", "#9F005F", "#BF003F", "#DF001F", "#ff0000" ];
 var fontSizeLookupTable = [ "100%", "150%", "200%", "250%", "300%", "350%", "400%", "450%", "500%", "550%" ];
 
-function updateCloud(datasource) {
+/*function updateCloud(datasource) {
     // calculate range of counts and count changes
     var max_count = 0,
         min_count = 0,
@@ -54,8 +55,8 @@ function updateCloud(datasource) {
             min_count_change = datasource[i].count_change;
         }
     }
-    /*console.log('max_count: ' + max_count);
-    console.log('min_count: ' + min_count);*/
+    console.log('max_count: ' + max_count);
+    console.log('min_count: ' + min_count);
     //console.log('max_count_change: '+max_count_change);
     //console.log('min_count_change: '+min_count_change);
     
@@ -131,7 +132,7 @@ function updateCloud(datasource) {
     function changeColorAndSize(hashtag, dest_color, dest_weight) {
         $("span:textEquals('" + hashtag + "')").animate({ fontSize: fontSizeLookupTable[dest_weight-1], color: colorLookupTable[dest_color] }, 1000);
     }
-}
+}*/
 
 function loadCloud(datasource, target_sel) {
     var mod_hashtagcounts = [];
@@ -141,12 +142,12 @@ function loadCloud(datasource, target_sel) {
         mod_hashtagcounts[i].text = val.hashtag;
         mod_hashtagcounts[i].weight = val.count;
         mod_hashtagcounts[i].link = window.location.pathname + val.hashtag;
-        mod_hashtagcounts[i].html = { rel: val.hashtag };
+        mod_hashtagcounts[i].html = { "data-id": val.hashtag };
         mod_hashtagcounts[i].afterWordRender = function loadColors() {
             var changeClass;
             var count = datasource.length;
             for (var i = 0; i < count; i++) {
-                if (datasource[i].hashtag == this.attr('rel')) {
+                if (datasource[i].hashtag == this.attr('data-id')) {
                     if (datasource[i].count_change > 0) {
                         if (max_positive !== 0) {
                             changeClass = 4 + Math.round(datasource[i].count_change / max_positive * 4);
