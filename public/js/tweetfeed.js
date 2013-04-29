@@ -1,7 +1,7 @@
 $(function () {
 
   // join the appropriate hashtag room
-  var socket = io.connect('http://localhost');
+  var socket = io.connect('http://realtimetagcloud.com');
   socket.emit('join tweetfeed', { hashtag: hashtag_name });
   
   var tweet_array = []; // buffer array to hold tweets until they're displayed
