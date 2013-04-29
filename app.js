@@ -88,6 +88,10 @@ stream.on('tweet', function (tweet) {
     }
 });
 
+stream.on('connect', function(request) {
+    console.log("TWITTER CONNECT");
+});
+
 stream.on('disconnect', function (disconnectMessage) {
     console.log("TWITTER DISCONNECT MESSAGE: " + disconnectMessage);
     stream.start();
