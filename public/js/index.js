@@ -21,6 +21,7 @@ $.expr[':'].textEquals = function(a, i, m) {
 };
 
 socket.on('update cloud', function (data) {
+    hashtagcounts = data.hashtagcounts;
     if ($('div span').length === 0) {
         loadCloud(hashtagcounts, '#content');
     } else {

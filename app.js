@@ -6,6 +6,7 @@ var express = require('express')
   , server = require('http').createServer(app)
   , io = require('socket.io').listen(server);
 server.listen(8090);
+io.disable('browser client cache');
 
 // Import credentials for DB and Twitter
 var credentials = require('./credentials.js');
