@@ -75,12 +75,15 @@ module.exports = function(mongoose, HashtagCount) {
                             for (var j = 0; j < count; j++) {
                                 if (found_entry.hashtag == docs[j].hashtag) {
                                     docs[j].count_change = docs[j].count - found_entry.count;
+                                    console.log("docs[j].count_change = " + docs[j].count_change);
                                 }
                             }
                         }
                         find_completed_count++;
                         if (find_completed_count === 50) {
+                            find_completed_count = 0;
                             inner_callback();
+                            console.log('DOC CALCULATIONS COMPLETE');
                         }
                     });
                 }

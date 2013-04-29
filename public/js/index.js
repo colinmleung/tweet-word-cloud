@@ -1,4 +1,4 @@
-var socket = io.connect('http://realtimetagcloud.com');
+var socket = io.connect('http://www.realtimetagcloud.com');
 socket.emit('join hashtagcloud');
 
 $(function () {
@@ -24,6 +24,7 @@ socket.on('update cloud', function (data) {
     hashtagcounts = data.hashtagcounts;
     if ($('div span').length === 0) {
         loadCloud(hashtagcounts, '#content');
+        console.log("NOT SUPPOSED TO HAPPEN");
     } else {
         $('#content').fadeTo('slow', 0, function () {
             $('#content').empty();

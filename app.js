@@ -127,9 +127,13 @@ function emitTweet (hashtags, text) {
 
 // updates the list of top hashtags in the DB, and assigns it to top_hashtag_list
 setInterval(function() {
+    console.log("SET INTERVAL");
     Tweet.count(function (err, count) {
+        console.log("COUNTING TWEETS");
         if (count > 0) {
+            console.log("OVER ZERO TWEETS");
             Tweet.countTags(function (err, docs) {
+                console.log("TAGS COUNTED");
                 HashtagCount.getList(function (err, docs) {
                     old_hashtag_list = top_hashtag_list.slice(0);
                     var length = docs.length;
@@ -137,6 +141,7 @@ setInterval(function() {
                         top_hashtag_list[i] = docs[i].hashtag;
                     }
                     
+                    console.log("CLOUD UPDATE FROM SERVER SIDE");
                     // send tag clouds updated hashtag data
                     io.sockets.in('hashtagcloud').emit('update cloud', { hashtagcounts: docs });
                     
@@ -150,6 +155,7 @@ setInterval(function() {
                 });
             });
         } else {
+            console.log("ALL TAGS DROPPED");
             HashtagCount.remove(function () {
                 io.sockets.in('hashtagcloud').emit('no tags');
                 var old_length = old_hashtag_list.length;
