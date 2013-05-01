@@ -2,12 +2,32 @@ extends layout
 
 block title
     title realtimetagcloud
-    
-block append styles
+
+prepend content
+    div#blurb
+        p
+            | top 50 hashtags on 
+            a(href='https://twitter.com/') twitter
+            |  by the hour
+    div#colorline
+        p hot
+        div.color8
+        div.color7
+        div.color6
+        div.color5
+        div.color4
+        div.color3
+        div.color2
+        div.color1
+        div.color0
+        p not
+        
+
+append styles
     link(rel='stylesheet', type='text/css', href='/styles/jqcloud.css')
     link(rel='stylesheet', type='text/css', href='/styles/index.css')
     
-block append scripts
+append scripts
     script(type='text/javascript')
         var hashtagcounts = $.parseJSON(!{JSON.stringify(data)});
     script(type='text/javascript', src='/js/libs/jqcloud.js')

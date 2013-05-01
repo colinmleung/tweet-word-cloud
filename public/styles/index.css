@@ -14,3 +14,54 @@ div.jqcloud a:hover { color: #ffffff; }
     display: none;
     visibility: hidden;
 }
+
+#blurb {
+    color: white;
+    font-family: "Helvetica", "Arial", sans-serif;
+    position: absolute;
+    font-size: 12px;
+    margin-left: 10px;
+    z-index: 1;
+}
+
+#blurb a {
+    color: white;
+    text-decoration: none;
+}
+
+#blurb a:hover {
+    text-decoration: underline;
+    cursor: hand;
+    cursor: pointer;
+}
+
+#colorline {
+    position: absolute;
+    z-index: 1;
+    top: 10%;
+    margin-left: 10px;
+}
+
+#colorline > div {
+    width: 25px;
+    height: 15px;
+}
+
+div.color0 { background-color: #0000ff; }
+div.color1 { background-color: #1F00DF; }
+div.color2 { background-color: #3F00BF; }
+div.color3 { background-color: #5F009F; }
+div.color4 { background-color: #7F007F; }
+div.color5 { background-color: #9F005F; }
+div.color6 { background-color: #BF003F; }
+div.color7 { background-color: #DF001F; }
+div.color8 { background-color: #ff0000; }
+
+#colorline > p {
+    color: white;
+    font-family: "Helvetica", "Arial", sans-serif;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    font-size: 10px;
+    margin-left: 5px;
+}
