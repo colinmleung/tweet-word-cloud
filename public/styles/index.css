@@ -43,8 +43,8 @@ div.jqcloud a:hover { color: #ffffff; }
 }
 
 #colorline > div {
-    width: 25px;
-    height: 15px;
+    width: 10px;
+    height: 20px;
 }
 
 div.color0 { background-color: #0000ff; }
@@ -63,5 +63,5 @@ div.color8 { background-color: #ff0000; }
     margin-top: 0px;
     margin-bottom: 0px;
     font-size: 10px;
-    margin-left: 5px;
+    margin-left: -3px;
 }
